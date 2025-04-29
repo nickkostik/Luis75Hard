@@ -1,0 +1,688 @@
+/* Basic Reset & Font */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Apple-like font stack */
+    background-color: #FFFFFF; /* White background */
+    color: #1D1D1F; /* Near-black text */
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.site-header { /* Changed from 'header' to '.site-header' class */
+    text-align: center;
+    padding: 30px 20px 15px 20px; /* Adjusted padding */
+}
+
+#site-logo {
+    max-height: 200px; /* Increased size (80px * 2.5) */
+    width: auto; /* Maintain aspect ratio */
+    display: inline-block; /* Allows centering via text-align on parent */
+}
+
+/* Day Counter Styles */
+.day-counter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.5em; /* Large font size */
+    text-align: center;
+    margin-top: 10px; /* Space below header */
+    margin-bottom: 20px; /* Space above calendar */
+    color: #333; /* Dark grey color */
+    line-height: 1.1;
+}
+
+
+/* Main Content Area */
+main {
+    max-width: 1200px; /* Limit width for larger screens */
+    margin: 20px auto; /* Center content */
+    padding: 0 20px;
+}
+
+/* Calendar Grid Styles */
+.calendar-container { /* New container for headers + grid */
+    padding: 20px 0;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 days a week */
+    gap: 5px; /* Reduced gap for headers */
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #6E6E73; /* Muted color for headers */
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Always 7 columns */
+    gap: 10px; /* Adjusted gap */
+    /* Removed padding, handled by container */
+}
+
+.calendar-cell {
+    border: 1px solid #EAEAEA; /* Slightly lighter border */
+    background-color: #FFFFFF;
+    aspect-ratio: 1 / 1; /* Keep cells square */
+    display: flex; /* Keep flex for alignment */
+    /* Use align-items and justify-content for number positioning if needed */
+    align-items: flex-start; /* Align number to top */
+    justify-content: flex-end; /* Align number to right */
+    font-size: 0.9em; /* Smaller font for day number */
+    font-weight: 600; /* Bolder number */
+    cursor: default;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+    position: relative; /* Needed for number overlay */
+    border-radius: 6px;
+    background-size: cover; /* Cover the cell area */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat;
+    overflow: hidden; /* Hide potential image overflow */
+}
+
+/* Style for the day number inside the cell */
+.calendar-cell .day-number {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent */
+    background-color: rgba(255, 255, 255, 0.6); /* Light semi-transparent background */
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.85em; /* Even smaller for the overlay */
+    line-height: 1;
+    z-index: 1; /* Ensure it's above the background image */
+    pointer-events: none; /* Allow clicks to pass through to the cell */
+}
+
+/* Style for empty cells before day 1 */
+.calendar-cell.empty {
+    background-color: transparent;
+    border-color: transparent;
+    cursor: default;
+}
+
+
+/* Remove background color change for completed if using image */
+.calendar-cell.completed {
+    /* background-color: #F0F0F5; */ /* Remove this if image is present */
+    border-color: #C6C6C8;
+    cursor: pointer;
+}
+
+/* Add subtle overlay/border on hover for cells with images */
+.calendar-cell.has-image:hover::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 2px solid rgba(0, 122, 255, 0.7); /* Apple blueish hover border */
+    border-radius: inherit; /* Match cell rounding */
+    pointer-events: none; /* Don't interfere with clicks */
+}
+
+
+.calendar-cell.completed:not(.has-image):hover { /* Hover only for non-image completed cells */
+    background-color: #E0E0E5;
+    border-color: #B0B0B5;
+    transform: scale(1.03);
+}
+
+
+/* Style for admin clickable cells */
+.calendar-cell.admin-clickable {
+     cursor: pointer; /* Ensure pointer for all admin cells */
+}
+.calendar-cell.admin-clickable:not(.empty):hover {
+     /* background-color: #E8F0FE; */ /* Remove background hover if using image hover */
+     /* border-color: #a8c7fa; */
+     transform: scale(1.03);
+}
+/* Ensure admin hover overlay is distinct if needed, or reuse .has-image:hover::after */
+.calendar-cell.admin-clickable.has-image:hover::after {
+     border-color: rgba(88, 86, 214, 0.7); /* Apple purpleish admin hover maybe? */
+}
+
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 0.9em;
+    color: #6E6E73; /* Muted gray for footer text */
+    border-top: 1px solid #E5E5E5; /* Separator line */
+    margin-top: 40px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: #FFFFFF;
+    margin: 10% auto; /* Centered vertically and horizontally */
+    padding: 30px;
+    border-radius: 12px; /* Rounded corners */
+    max-width: 450px; /* Max width (Reduced by 25%) */
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: scaleUp 0.3s ease-in-out;
+}
+
+.close-button {
+    color: #8A8A8E;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #1D1D1F;
+    text-decoration: none;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.modal-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px; /* Slightly rounded image corners */
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    line-height: 1.7;
+}
+
+/* Keyframe animations for modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Add fadeOut and scaleDown if needed for closing animation */
+/* --- Enhanced Modal Form Styles --- */
+
+.modal-content .form-group {
+    margin-bottom: 20px; /* Increased spacing between form groups */
+}
+
+.modal-content label {
+    display: block; /* Ensure label is on its own line */
+    font-weight: 500; /* Slightly bolder labels */
+    color: #333; /* Darker label color */
+    margin-bottom: 8px; /* Space between label and input */
+    font-size: 0.95em;
+}
+
+/* Consistent styling for text inputs, selects, and textareas */
+.modal-content input[type="file"],
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px 12px; /* Comfortable padding */
+    border: 1px solid #ccc; /* Standard border */
+    border-radius: 6px; /* Slightly rounded corners */
+    font-family: inherit; /* Use body font */
+    font-size: 1em;
+    background-color: #f8f8f8; /* Subtle background */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.modal-content input[type="file"] {
+    padding: 8px 10px; /* Adjust padding for file input */
+    background-color: #fff;
+}
+
+
+.modal-content select {
+     appearance: none; /* Remove default dropdown arrow */
+     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); /* Custom arrow */
+     background-repeat: no-repeat;
+     background-position: right 12px center;
+     background-size: 16px 12px;
+}
+
+.modal-content textarea {
+    resize: vertical; /* Allow vertical resize only */
+    min-height: 80px;
+}
+
+/* Focus styles for inputs */
+.modal-content input[type="file"]:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+    outline: none;
+    border-color: #007AFF; /* Apple blue focus */
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+/* Slider specific styles */
+.modal-content input[type="range"] {
+    width: 100%; /* Take full width within its container */
+    height: 8px;
+    cursor: pointer;
+    appearance: none;
+    background: linear-gradient(to right, #007AFF, #007AFF) no-repeat #ddd; /* Blue track up to thumb */
+    background-size: 50% 100%; /* Default middle position */
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+/* Update slider track fill based on value */
+.modal-content input[type="range"]#diet-rating { background-size: calc((var(--value, 5) - 1) / 9 * 100%) 100%; }
+.modal-content input[type="range"]#sleep-hours { background-size: calc(var(--value, 7.5) / 12 * 100%) 100%; }
+
+
+/* Slider thumb styles (WebKit/Blink) */
+.modal-content input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #007AFF;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff; /* White border for contrast */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Slider thumb styles (Firefox) */
+.modal-content input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #007AFF;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Slider value display */
+.modal-content .form-group div[style*="display: flex"] { /* Target the flex container for sliders */
+    align-items: center;
+    gap: 15px; /* More space between slider and value */
+}
+.modal-content #diet-rating-value,
+.modal-content #sleep-hours-value {
+    font-weight: 500;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    min-width: 40px; /* Ensure enough space */
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* Small helper text */
+.modal-content small {
+    display: block;
+    font-size: 0.85em;
+    color: #6E6E73; /* Muted color */
+    margin-top: 6px;
+}
+
+/* Form Actions (Buttons) */
+.modal-content .form-actions {
+    margin-top: 30px; /* More space above buttons */
+    padding-top: 20px; /* Space from content */
+    border-top: 1px solid #e5e5e5; /* Separator line */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-content button[type="submit"] {
+    background-color: #007AFF; /* Apple blue */
+    color: white;
+}
+.modal-content button[type="submit"]:hover {
+    background-color: #005ecb; /* Darker blue on hover */
+}
+.modal-content button[type="submit"]:disabled {
+    background-color: #a0cfff;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+.modal-content .cancel-button {
+    background-color: #e5e5e5; /* Light gray */
+    color: #333;
+    border: 1px solid #ccc;
+}
+.modal-content .cancel-button:hover {
+    background-color: #dcdcdc; /* Slightly darker gray */
+}
+
+/* Current photo preview */
+.modal-content #current-photo-preview {
+    max-width: 150px; /* Slightly larger preview */
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+}
+/* Style for the custom mood input */
+.modal-content #mood-other {
+    /* display: none; /* Controlled by JS, but good fallback */
+    margin-top: 8px; /* Space above if shown */
+    width: 100%; /* Take full width */
+    /* Inherits general input styles defined earlier */
+}
+/* --- Public Modal Detail Styles --- */
+#modal-details-container {
+    border-top: 1px solid #eee; /* Separator line */
+    padding-top: 15px;
+}
+
+.modal-content .modal-detail {
+    margin-bottom: 12px; /* Space between details */
+    font-size: 1.0em; /* Standard text size */
+    line-height: 1.5;
+}
+
+.modal-content .modal-detail strong {
+    color: #333; /* Darker label */
+    font-weight: 600; /* Bolder label */
+    margin-right: 8px;
+    display: inline-block; /* Ensure consistent alignment */
+    min-width: 80px; /* Align labels */
+}
+
+/* Specific styling for preformatted text (workouts) */
+.modal-content .modal-detail pre {
+    background-color: #f8f8f8; /* Subtle background */
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-top: 4px; /* Space from label */
+    font-family: inherit; /* Use body font */
+    white-space: pre-wrap; /* Allow wrapping */
+    word-wrap: break-word; /* Break long words */
+    font-size: 0.95em;
+    border: 1px solid #eee;
+}
+
+/* Specific styling for notes paragraph */
+.modal-content .modal-detail p {
+    margin-top: 4px; /* Space from label */
+    margin-bottom: 0; /* Reset default paragraph margin */
+}
+/* --- Progress Percentage & Quote Styles --- */
+.progress-percentage {
+    text-align: center;
+    font-size: 1.1em;
+    color: #6E6E73; /* Muted grey */
+    margin-top: -15px; /* Pull up slightly below day counter */
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.daily-quote {
+    text-align: center;
+    font-style: italic;
+    color: #333; /* Darker text */
+    margin-bottom: 30px;
+    padding: 0 30px; /* Add padding for longer quotes */
+    max-width: 700px; /* Limit width */
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* --- Modal Closing Animations --- */
+.modal.closing {
+    animation: fadeOut 0.3s ease-in-out forwards; /* Use forwards to keep final state */
+}
+
+.modal.closing .modal-content {
+    animation: scaleDown 0.3s ease-in-out forwards;
+}
+
+/* Keyframe animations for modal closing */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleDown {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.95); opacity: 0; }
+}
+/* Apply Bebas Neue font to Progress and Quote */
+.progress-percentage,
+.daily-quote {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px; /* Optional: Adjust spacing for Bebas Neue */
+}
+
+/* Adjust quote style slightly for Bebas Neue */
+.daily-quote {
+    font-style: normal; /* Remove italic */
+    font-size: 1.3em; /* Slightly larger for Bebas Neue */
+    color: #555; /* Slightly lighter color */
+    line-height: 1.4;
+}
+/* --- Calendar Cell Short Date Style --- */
+.calendar-cell .short-date {
+    position: absolute;
+    bottom: 5px; /* Position near the bottom */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.7em; /* Tiny font size */
+    color: #999; /* Light gray color */
+    font-weight: 400; /* Normal weight */
+    pointer-events: none; /* Allow clicks to pass through */
+    line-height: 1;
+    z-index: 1; /* Ensure it's above background image */
+}
+
+/* Adjust day number position slightly if needed */
+.calendar-cell .day-number {
+    top: 5px; /* Slightly more padding from top */
+    right: 7px;
+}
+/* --- Slider with Text Input Group --- */
+.slider-input-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.slider-input-group input[type="range"] {
+    flex-grow: 1; /* Slider takes remaining space */
+}
+
+.slider-input-group input[type="number"] {
+    width: 80px; /* Fixed width for number input */
+    padding: 8px;
+    text-align: right;
+    /* Inherits general input styles */
+}
+
+/* Hide default number input spinners (optional) */
+.slider-input-group input[type=number]::-webkit-outer-spin-button,
+.slider-input-group input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.slider-input-group input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
+}
+/* --- Styling Refinements (Override/Add) --- */
+
+/* Admin Modal Form */
+.modal-content label {
+    margin-bottom: 8px; /* Consistent space below labels */
+}
+
+.modal-content .form-group {
+    margin-bottom: 22px; /* Slightly more space between groups */
+}
+
+.slider-input-group input[type="number"] {
+    /* Mimic style of #diet-rating-value / #sleep-hours-value */
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    min-width: 50px; /* Ensure enough space */
+    width: auto; /* Allow width to adjust slightly based on min-width */
+    text-align: center;
+    font-size: 0.95em;
+    font-weight: 600; /* Increased boldness */
+    color: #333;
+    border: 1px solid #ddd; /* Add a subtle border */
+    height: auto; /* Let padding define height */
+    box-sizing: border-box;
+    appearance: textfield; /* Remove spinners */
+    -moz-appearance: textfield;
+}
+.slider-input-group input[type=number]::-webkit-outer-spin-button,
+.slider-input-group input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.modal-content .form-actions {
+    margin-top: 25px;
+    padding-top: 25px; /* Consistent spacing */
+    border-top: 1px solid #eaeaec; /* Slightly softer border */
+}
+
+.modal-content button {
+    padding: 10px 22px; /* Slightly more horizontal padding */
+}
+
+/* Public Modal Details */
+#modal-details-container {
+    margin-top: 25px; /* More space below photo */
+    padding-top: 20px;
+}
+
+.modal-content .modal-detail strong {
+    min-width: 130px; /* Increased min-width for better label alignment */
+    display: inline-block; /* Ensure block behavior for width */
+    font-weight: 500; /* Slightly less bold */
+    color: #444;
+}
+
+.modal-content .modal-detail {
+    margin-bottom: 15px; /* More space between detail lines */
+}
+
+.modal-content .modal-detail pre,
+.modal-content .modal-detail p {
+    margin-left: 138px; /* Indent content to align with labels (min-width + margin-right) */
+    margin-top: -1.5em; /* Pull up slightly to align with label */
+    padding-left: 0; /* Remove padding if inheriting from pre */
+}
+.modal-content .modal-detail pre {
+     margin-top: -1.5em; /* Adjust specifically for pre */
+     padding: 8px 10px; /* Adjust padding */
+}
+
+
+/* Adjust slider value display */
+.modal-content #diet-rating-value,
+.modal-content #sleep-hours-value {
+    font-size: 0.95em;
+    min-width: 50px; /* Ensure enough space */
+    padding: 5px 10px;
+}
+/* Style for units within slider input group */
+/* Style for units within slider input group (Combined) */
+.slider-input-group .unit {
+    font-size: 0.9em;
+    color: #333; /* Match input box text color */
+    font-weight: 600; /* Match input box boldness */
+    margin-left: -5px; /* Adjust spacing slightly */
+    white-space: nowrap; /* Prevent wrapping */
+}
+/* --- Summary Stats Styles --- */
+.summary-stats-container {
+    max-width: 1000px; /* Adjust width as needed */
+    margin: 40px auto 20px auto; /* Spacing above/below */
+    padding: 20px 25px; /* Padding */
+    background-color: #f9f9f9; /* Very light grey background */
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+    gap: 15px 20px; /* Row and column gap */
+    border: 1px solid #eee;
+}
+
+.summary-stat {
+    text-align: center;
+    padding: 10px 5px; /* Padding within each stat box */
+}
+
+.summary-stat .label {
+    display: block;
+    font-size: 0.85em;
+    color: #666; /* Muted label color */
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.summary-stat .value {
+    display: block;
+    font-size: 1.3em; /* Larger value text */
+    color: #333;
+    font-weight: 600; /* Bolder value */
+    line-height: 1.2;
+}
+
+/* Specific adjustments if needed */
+#summary-diet .value {
+    display: inline-block; /* Keep /10 on same line */
+}
+/* Reduce font size for steps input on mobile */
+@media (max-width: 767px) {
+    #steps-taken-input,
+    #calories-burned-input {
+        font-size: 0.75em; /* Make it even smaller for mobile */
+        padding-left: 5px; /* Reduce horizontal padding */
+        padding-right: 5px; /* Reduce horizontal padding */
+    }
+}
