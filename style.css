@@ -64,7 +64,7 @@ main {
 
 .calendar-cell {
     border: 1px solid #EAEAEA; /* Slightly lighter border */
-    background-color: #FFFFFF;
+    /* background-color: #FFFFFF; */ /* Removed default white background */
     aspect-ratio: 1 / 1; /* Keep cells square */
     display: flex; /* Keep flex for alignment */
     /* Use align-items and justify-content for number positioning if needed */
@@ -685,4 +685,132 @@ footer {
         padding-left: 5px; /* Reduce horizontal padding */
         padding-right: 5px; /* Reduce horizontal padding */
     }
+}
+/* --- Photo Gallery Styles (Admin & Public Modals) --- */
+
+/* Admin Modal Gallery */
+#photo-gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f0f5; /* Light background for the gallery area */
+    border-radius: 6px;
+    min-height: 50px; /* Ensure it has some height even when empty */
+}
+
+#photo-gallery-container p { /* Style for "No photos" text */
+    grid-column: 1 / -1; /* Span all columns */
+    text-align: center;
+    color: #6E6E73;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+.photo-item {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1; /* Square items */
+}
+
+.photo-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area */
+    margin-bottom: 0; /* Override default img margin */
+}
+
+.photo-item .photo-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 4px;
+    display: flex;
+    justify-content: space-around;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease-in-out;
+}
+
+.photo-item:hover .photo-actions {
+    opacity: 1; /* Show on hover */
+}
+
+.photo-item .photo-actions button {
+    font-size: 0.75em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background-color: #555;
+    transition: background-color 0.2s ease;
+}
+
+.photo-item .photo-actions button:hover {
+    background-color: #777;
+}
+
+.photo-item .photo-actions button.delete-button {
+    background-color: #dc3545; /* Red for delete */
+}
+.photo-item .photo-actions button.delete-button:hover {
+    background-color: #c82333;
+}
+
+.photo-item .photo-actions button.cover-button {
+    background-color: #007AFF; /* Blue for cover */
+}
+.photo-item .photo-actions button.cover-button:hover {
+    background-color: #005ecb;
+}
+.photo-item .photo-actions button.cover-button:disabled {
+    background-color: #6c757d; /* Grey when disabled (already cover) */
+    opacity: 0.8;
+    cursor: default;
+}
+
+
+.photo-item.is-cover::after { /* Highlight cover photo */
+    content: 'Cover';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background-color: rgba(0, 122, 255, 0.8); /* Blue background */
+    color: white;
+    padding: 2px 5px;
+    font-size: 0.7em;
+    font-weight: bold;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+/* Public Modal Gallery */
+#modal-photo-gallery {
+    display: flex; /* Use flexbox for horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 10px; /* Space between images */
+    margin-bottom: 20px; /* Space below gallery */
+    justify-content: center; /* Center images if they don't fill the row */
+}
+
+.modal-gallery-image {
+    max-width: 100%; /* Ensure images don't overflow */
+    max-height: 300px; /* Limit height */
+    height: auto;
+    width: auto; /* Adjust width automatically */
+    border-radius: 6px;
+    border: 1px solid #eee;
+    object-fit: contain; /* Show the whole image */
+}
+
+.modal-gallery-image.cover { /* Optional: Add border to highlight cover */
+    border: 3px solid #007AFF;
+    box-shadow: 0 0 8px rgba(0, 122, 255, 0.5);
 }

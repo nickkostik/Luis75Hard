@@ -211,9 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const dayData = challengeData[i];
 
-            // Check if data exists and has content (photo or any new field)
+            // Check if data exists and has content (photos array or any new field)
             const hasContent = dayData && (
-                dayData.photo ||
+                (Array.isArray(dayData.photos) && dayData.photos.length > 0) || // Check if photos array has items
                 dayData.mood ||
                 dayData.diet_rating !== null || // Check for null explicitly for numbers
                 dayData.sleep_hours !== null ||
@@ -226,13 +226,38 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             if (hasContent) {
+                console.log(`Day ${i}: hasContent is true. Adding 'completed' class and click listener.`); // DEBUG
                 cell.classList.add('completed');
                 cell.addEventListener('click', () => openModal(i)); // Listener only added if hasContent
 
-                // Apply background image if photo exists
-                if (dayData.photo) {
-                    cell.style.backgroundImage = `url('${dayData.photo}')`;
-                    cell.classList.add('has-image'); // Add class for specific image styling/hover
+                // Apply background image using the cover photo (or first photo)
+                let coverPhotoPath = null;
+                if (dayData.photos && Array.isArray(dayData.photos) && dayData.photos.length > 0) {
+                    const coverPhoto = dayData.photos.find(p => p.isCover);
+                    coverPhotoPath = coverPhoto ? coverPhoto.path : dayData.photos[0].path; // Fallback to first
+                }
+
+                if (coverPhotoPath) {
+                     // Preload and apply background image
+                    const imageUrl = `${coverPhotoPath}?cachebust=${new Date().getTime()}`;
+                    console.log(`Day ${i}: Setting background. coverPhotoPath: ${coverPhotoPath}, imageUrl: ${imageUrl}`); // DEBUG
+                    const img = new Image();
+                    img.onload = () => {
+                        console.log(`Day ${i}: Image loaded successfully: ${imageUrl}`); // DEBUG
+                        void cell.offsetHeight; // Force reflow
+                        cell.style.backgroundImage = `url('${imageUrl}')`;
+                        cell.classList.add('has-image');
+                    };
+                    img.onerror = () => {
+                        console.error(`Day ${i}: Failed to load cover image: ${imageUrl}`); // DEBUG
+                        // Optionally apply a fallback color if image fails but content exists
+                        if(hasContent) cell.style.backgroundColor = '#E8E8ED'; // Lighter fallback for public
+                    };
+                    img.src = imageUrl;
+                } else if (hasContent) {
+                     console.log(`Day ${i}: hasContent is true, but no coverPhotoPath. Applying fallback color.`); // DEBUG
+                     // Apply fallback color if other data exists but no photos
+                     cell.style.backgroundColor = '#E8E8ED'; // Lighter fallback for public
                 }
             }
 
@@ -255,9 +280,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalDayNumber.textContent = `Day ${day}`;
 
-        // Handle Photo
-        modalPhoto.src = dayData.photo || ''; // Set src to empty if no photo
-        modalPhoto.style.display = dayData.photo ? 'block' : 'none'; // Hide img element if no photo
+        // --- Handle Photo Gallery ---
+        const photoGalleryElement = document.getElementById('modal-photo-gallery'); // Get the gallery container
+        if (photoGalleryElement) {
+            photoGalleryElement.innerHTML = ''; // Clear previous photos
+            if (dayData.photos && Array.isArray(dayData.photos) && dayData.photos.length > 0) {
+                dayData.photos.forEach((photo, index) => {
+                    const img = document.createElement('img');
+                    img.src = `${photo.path}?cachebust=${new Date().getTime()}`;
+                    img.alt = `Day ${day} - Photo ${index + 1}`;
+                    img.classList.add('modal-gallery-image'); // Add class for styling
+                    if (photo.isCover) {
+                        img.classList.add('cover'); // Add class to highlight cover
+                    }
+                    img.onerror = () => { img.alt = 'Error loading image'; /* Handle broken images */ };
+                    photoGalleryElement.appendChild(img);
+                });
+                photoGalleryElement.style.display = 'flex'; // Or 'grid', depending on desired layout
+            } else {
+                photoGalleryElement.style.display = 'none'; // Hide gallery if no photos
+            }
+        } else {
+            console.error("Modal photo gallery container not found!");
+        }
+        // --- End Photo Gallery ---
+
 
         // --- Populate Details ---
         // Mood

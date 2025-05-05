@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Follow Luis Garcia’s 75 Hard journey—daily workouts, diet logs & mindset updates. Get tips, progress photos and motivation to crush your own challenge.">
     <title>Admin - Luis's 75 Hard Journey</title>
-    <link rel="stylesheet" href="style.css"> <!-- Use the same stylesheet -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="style.css?v=1"> <!-- Added cache-busting query -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Consider adding a font like Inter or Roboto from Google Fonts -->
@@ -74,10 +74,17 @@
                 <input type="hidden" id="edit-day-input" name="day"> <!-- Hidden input to store the day being edited -->
 
                 <div class="form-group">
-                    <label for="photo-upload">Upload today’s progress picture:</label>
-                    <img id="current-photo-preview" src="" alt="Current photo" style="display: none;"> <!-- Keep display:none inline -->
-                    <input type="file" id="photo-upload" name="photo" accept="image/jpeg, image/png, image/heic, image/*">
-                    <small>Upload a new photo to replace the current one (if any).</small>
+                    <label>Current Photos:</label>
+                    <div id="photo-gallery-container" class="photo-gallery">
+                        <!-- Photos will be loaded here by admin.js -->
+                        <p>No photos uploaded yet.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo-upload">Upload New Progress Pictures:</label>
+                    <input type="file" id="photo-upload" name="photos" accept="image/jpeg, image/png, image/heic, image/*" multiple>
+                    <small>You can select multiple photos to add.</small>
                 </div>
 
                 <!-- Mood -->
@@ -160,6 +167,6 @@
         </div>
     </div>
 
-    <script src="admin.js"></script> <!-- Link to admin-specific JavaScript -->
+    <script src="admin.js?v=TIMESTAMP"></script> <!-- Link to admin-specific JavaScript with cache busting -->
 </body>
 </html>

@@ -1,1 +1,56 @@
-{}
+{
+  "1": {
+    "mood": "Tired",
+    "diet_rating": 6,
+    "sleep_hours": 4.5,
+    "calories_burned": 1460,
+    "steps_taken": 17145,
+    "strength_workout": "100 pull ups\r\n100 dips\r\n100 push ups\r\n100 chin ups\r\n100 forearm rep work",
+    "cardio_workout": "3.1 miles 35 minutes. Very bad run ",
+    "additional_notes": "Woke up at 5:20 and did my morning routine by making my bed getting ready and praying. I ended up reading the Bible for 20 minutes as the sun rises. I went to the gym instead of running because it was cold and later in the day it was gonna be warm with good UV light. ",
+    "photos": [
+      {
+        "path": "images/day1-1746023653323-331577316.png",
+        "isCover": true
+      }
+    ]
+  },
+  "2": {
+    "mood": "Happy",
+    "diet_rating": 5,
+    "sleep_hours": 8.75,
+    "calories_burned": 1810,
+    "steps_taken": 13485,
+    "strength_workout": "500 pictured above",
+    "cardio_workout": "3.02 at 26 way better not great tho",
+    "additional_notes": null,
+    "photos": [
+      {
+        "path": "images/day2-1746154384405-876465916.png",
+        "isCover": true
+      }
+    ]
+  },
+  "3": {
+    "mood": "Tired",
+    "diet_rating": 8,
+    "sleep_hours": 8.75,
+    "calories_burned": 1000,
+    "steps_taken": 4115,
+    "strength_workout": "Hitting another 500 but tomorrow is back to the weight room ",
+    "cardio_workout": null,
+    "additional_notes": "Getting groceries this weekend tyshi",
+    "photos": []
+  },
+  "4": {
+    "mood": "Tired",
+    "diet_rating": 5,
+    "sleep_hours": 2.75,
+    "calories_burned": 1000,
+    "steps_taken": 10000,
+    "strength_workout": null,
+    "cardio_workout": "Program said rest, i fucking took it idgaf",
+    "additional_notes": "Calf’s and shins are hurting ",
+    "photos": []
+  }
+}

@@ -1,6 +1,6 @@
 # Luis75Hard
 
-This project is a web application for the 75 Hard challenge.
+This project is a web application for the 75 Hard challenge, originally for Luis.
 
 ## Setup and Installation
 
